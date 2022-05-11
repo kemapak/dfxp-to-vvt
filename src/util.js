@@ -1,6 +1,13 @@
-function readFile(location, fileName) {
+const fs = require("fs");
 
-    throw new Error(location + '/' + fileName + ' does not exists!');
+function readFile(fileLocation) {
+
+    // Checks synchronously if the file exists.
+    if (!fs.existsSync(fileLocation)) {
+        throw new Error(fileLocation + ' does not exists!');
+    }
+
+    return true;
 }
 
 module.exports = readFile;
