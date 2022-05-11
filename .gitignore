@@ -1,3 +1,9 @@
+# Code Editor Configurations, Settings
+.idea
+
+# We do not need the package-lock file
+package-lock.json
+
 # Logs
 logs
 *.log

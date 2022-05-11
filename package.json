@@ -1,0 +1,24 @@
+{
+  "name": "dfxp_to_vvt",
+  "version": "1.0.0",
+  "author": "Kem Apak",
+  "homepage": "http://www.softwarenotes.net",
+  "license": "MIT",
+
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "Video Player",
+    "JavaScript",
+    "Closed Caption",
+    "DFXP",
+    "VVT",
+    "Converter",
+    "DFXP to VVT Converter"
+  ],
+
+  "devDependencies": {
+    "jest": "^28.1.0"
+  }
+}
