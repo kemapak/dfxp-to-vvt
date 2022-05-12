@@ -4,7 +4,6 @@
   "author": "Kem Apak",
   "homepage": "http://www.softwarenotes.net",
   "license": "MIT",
-
   "scripts": {
     "test": "jest"
   },
@@ -17,7 +16,6 @@
     "Converter",
     "DFXP to VVT Converter"
   ],
-
   "devDependencies": {
     "jest": "^28.1.0"
   }

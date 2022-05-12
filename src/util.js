@@ -7,7 +7,9 @@ function readFile(fileLocation) {
         throw new Error(fileLocation + ' does not exists!');
     }
 
-    return true;
+    let data = fs.readFileSync(fileLocation, 'utf-8');
+
+    return data.toString();
 }
 
 module.exports = readFile;
