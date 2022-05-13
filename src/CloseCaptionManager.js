@@ -27,22 +27,7 @@ class CloseCaptionManager {
 
     convert(inputText) {
        // debugger;
-
-        // Remove formatting characters;
-        inputText = inputText.replace(/[\r\n]/g, '');
-
-       // debugger;
-
-        // Get the content in the body tag.
-        let bodyText = inputText.split('<body>')[1];
-        bodyText = bodyText.split('</body>')[0];
-
-        // Get the content in the div tag that have CC information.
-        let divText = bodyText.split('<div>')[1];
-        divText = divText.split('</div>')[0];
-
-        // Get each CC information within the P  tags.
-        let pCollection = divText.split('<p');
+        let pCollection = this.getContentFragments(inputText);
 
         let ccCollection = [];
         for (let index = 0, maxIndex = pCollection.length; index < maxIndex; index++) {
@@ -76,8 +61,27 @@ class CloseCaptionManager {
             }
         }
         let x = ccCollection;
-        debugger;
+        // debugger;
 
+    }
+
+    /**
+     * Return the content fragment from the DFXP string.
+     * @param inputText {String}
+     * @returns {*} {Array}
+     */
+    getContentFragments(inputText) {
+
+        // Remove formatting characters;
+        inputText = inputText.replace(/[\r\n]/g, '');
+
+        // Get the content fragments which are in <p> tags
+        let contentFragments = inputText.match(/<body><div>(.*?)<\/div><\/body>/)[1];
+
+        // Create a content fragment from each <p> tag.
+        let pCollection = contentFragments.split('<p');
+
+        return pCollection;
     }
 }
 
