@@ -17,7 +17,7 @@ class CloseCaptionManager {
 
     }
 
-    getEndPropertyValue(text){
+    getEndPropertyValue(text) {
 
     }
 
@@ -25,40 +25,30 @@ class CloseCaptionManager {
 
     }
 
-    convert(inputText) {
-       // debugger;
-        let pCollection = this.getContentFragments(inputText);
+    convert(dfxpString) {
+        // debugger;
+        let contentFragments = this.getContentFragments(dfxpString);
 
         let ccCollection = [];
-        for (let index = 0, maxIndex = pCollection.length; index < maxIndex; index++) {
-            let ccFrame = {};
-            let frame = pCollection[index];
-            if (frame.indexOf('begin=') >= 0) {
-               // debugger;
-                let regionIndex = 0;
-                let values = frame.split('"');
+        for (let index = 0, maxIndex = contentFragments.length; index < maxIndex; index++) {
 
-                ccFrame.begin = values[1];
-                ccFrame.end = values[3];
-                ccFrame.text= [];
-                ccFrame.text[regionIndex] = frame.match(/>(.*?)</)[1];
+            let frame = contentFragments[index];
 
-                // The previous member could have the same begining and end so the text we got for the this current item will be the next line.
-                if (0 === ccCollection.length) {
-                    ccCollection.push(ccFrame);
-                    continue;
-                } else {
-                    let previousElement = ccCollection[ccCollection.length-1];
-                    if (previousElement.begin == ccFrame.begin){
-                        previousElement.text.push(ccFrame.text[regionIndex]);
-                        continue;
-                    } else {
-                        ccCollection.push(ccFrame);
-                    }
-                }
-
-             //   debugger;
+            if (!this.isClosedCaptionFragmentValid(frame)) {
+                continue;
             }
+
+            let currentCCFrame = this.createFrame(frame);
+
+            let previousCCFrame = ccCollection[ccCollection.length - 1];
+            if ((null != previousCCFrame) && (previousCCFrame.begin == currentCCFrame.begin)) {
+                previousCCFrame.text.push(currentCCFrame.text[0]);
+                continue;
+            } else {
+                ccCollection.push(currentCCFrame);
+            }
+
+
         }
         let x = ccCollection;
         // debugger;
@@ -66,7 +56,44 @@ class CloseCaptionManager {
     }
 
     /**
-     * Return the content fragment from the DFXP string.
+     * This method checks if a fragment string is valid and has the necessary parameters.
+     *
+     * @param fragmentString {String}
+     * @returns {Boolean}
+     */
+    isClosedCaptionFragmentValid(fragmentString) {
+
+        if ((fragmentString.indexOf('begin=') >= 0) && (fragmentString.indexOf('end=') >= 0)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Create a close caption fragment in JSON from the string frame parameter.
+     *
+     * @param frame {String} example format: <p begin="00:00:00" end="00:00:00">text</p>
+     * @returns {Object} example format: {begin: "00:00:00", end: "00:00:00", text: ["text"]}
+     */
+    createFrame(frame) {
+
+        let parameterValues = frame.split('"');
+
+        let ccFrame = {};
+
+        ccFrame.begin = parameterValues[1];
+        ccFrame.end = parameterValues[3];
+
+        /* We create text as a collections since there could be multiple lines for the same segment/fragment. */
+        ccFrame.text = [];
+        ccFrame.text[0] = frame.match(/>(.*?)</)[1];
+
+        return ccFrame;
+    }
+
+    /**
+     * Return the content fragments from the DFXP string.
      * @param inputText {String}
      * @returns {*} {Array}
      */
