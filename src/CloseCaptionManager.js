@@ -2,18 +2,15 @@ const FileUtil = require('./FileUtil.js');
 
 class CloseCaptionManager {
 
-    // Jest cannot handle static/utility classes so added empty constructor.
-    constructor() {}
-
-    read(fileLocation) {
+    static read(fileLocation) {
         return FileUtil.readFile(fileLocation);
     }
 
-    write() {
+    static write(fileLocation, ccCollection) {
 
     }
 
-    convert(dfxpString) {
+    static convert(dfxpString) {
 
         let contentFragments = this.getContentFragments(dfxpString);
 
@@ -37,7 +34,7 @@ class CloseCaptionManager {
      * @param inputText {String}
      * @returns {*} {Array}
      */
-    getContentFragments(inputText) {
+    static getContentFragments(inputText) {
 
         // Remove formatting characters;
         inputText = inputText.replace(/[\r\n]/g, '');
@@ -57,7 +54,7 @@ class CloseCaptionManager {
      * @param fragmentString {String}
      * @returns {Boolean}
      */
-    isClosedCaptionFragmentValid(fragmentString) {
+    static isClosedCaptionFragmentValid(fragmentString) {
 
         if ((fragmentString.indexOf('begin=') >= 0) && (fragmentString.indexOf('end=') >= 0)) {
             return true;
@@ -72,7 +69,7 @@ class CloseCaptionManager {
      * @param fragmentString {String} example format: <p begin="00:00:00:00" end="00:00:00:00">text</p>
      * @returns {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text", "text", ...]}
      */
-    createCCFragmentObject(fragmentString) {
+    static createCCFragmentObject(fragmentString) {
 
         let parameterValues = fragmentString.split('"');
 
@@ -95,7 +92,7 @@ class CloseCaptionManager {
      * @param ccFragment {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text", "text", ...]}
      * @param ccCollection {Array}
      */
-    addFragmentObjectToCollection(ccFragment, ccCollection) {
+    static addFragmentObjectToCollection(ccFragment, ccCollection) {
 
         let previousCCFrame = ccCollection[ccCollection.length - 1];
 

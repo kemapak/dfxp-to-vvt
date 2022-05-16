@@ -6,10 +6,8 @@ describe('Given a DFXP file ', () => {
     test('if a file does not exist should throw an exception', () => {
         let fileLocation = __dirname + '/asset/does-not-exists.txt';
 
-        let converter = new CCConverter();
-
         function wrapper() {
-            converter.read(fileLocation);
+            CCConverter.read(fileLocation);
         }
 
         expect(wrapper).toThrow(fileLocation + ' does not exists!');
@@ -18,17 +16,13 @@ describe('Given a DFXP file ', () => {
     test('if a file exist it should read the contents', () => {
         let fileLocation = __dirname + '/asset/test.txt';
 
-        let converter = new CCConverter();
-
-        expect(converter.read(fileLocation)).toMatch(/This is a test text file./);
+        expect(CCConverter.read(fileLocation)).toMatch(/This is a test text file./);
     });
 
     test('should convert DFXP contents fragments to an array Strings.', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
-        let converter = new CCConverter();
-
-        let xmlString = converter.read(fileLocation);
+        let xmlString = CCConverter.read(fileLocation);
 
         let jsonObject = [
             "",
@@ -88,7 +82,7 @@ describe('Given a DFXP file ', () => {
             " begin=\"00:01:27:13\" end=\"00:01:30:00\" region=\"pop2\" style=\"basic\" tts:origin=\"31.25% 84.67%\" tts:extent=\"37.5% 5.33%\">to write good code using TDD.</p>"
         ]
 
-        expect(converter.getContentFragments(xmlString)).toStrictEqual(jsonObject);
+        expect(CCConverter.getContentFragments(xmlString)).toStrictEqual(jsonObject);
 
     });
 
@@ -100,13 +94,11 @@ describe('Given a DFXP file ', () => {
         let invalidFragmentStringWithoutBeginAndEnd = 'region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
         let invalidEmptyString = '';
 
-        let converter = new CCConverter();
-
-        expect(converter.isClosedCaptionFragmentValid(validFragmentString)).toBeTruthy();
-        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBegin)).toBeFalsy();
-        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutEnd)).toBeFalsy();
-        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBeginAndEnd)).toBeFalsy();
-        expect(converter.isClosedCaptionFragmentValid(invalidEmptyString)).toBeFalsy();
+        expect(CCConverter.isClosedCaptionFragmentValid(validFragmentString)).toBeTruthy();
+        expect(CCConverter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBegin)).toBeFalsy();
+        expect(CCConverter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutEnd)).toBeFalsy();
+        expect(CCConverter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBeginAndEnd)).toBeFalsy();
+        expect(CCConverter.isClosedCaptionFragmentValid(invalidEmptyString)).toBeFalsy();
     });
 
     test('should create JavaScript object from content fragment string.', () => {
@@ -114,9 +106,7 @@ describe('Given a DFXP file ', () => {
         let fragmentString = 'begin=\"00:00:01:23\" end=\"00:00:05:07\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
         let fragmentObject = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is']};
 
-        let converter = new CCConverter();
-
-        expect(converter.createCCFragmentObject(fragmentString)).toStrictEqual(fragmentObject);
+        expect(CCConverter.createCCFragmentObject(fragmentString)).toStrictEqual(fragmentObject);
     });
 
     test('should add a content fragment to fragment collection correctly.', () => {
@@ -130,26 +120,23 @@ describe('Given a DFXP file ', () => {
         let withOneFragmentCollection = [fragmentObjectOneOfOne];
         let fragmentCollectionThree = [fragmentObjectOne];
 
-        let converter = new CCConverter();
-
         // Adds a new element to the collection.
-        converter.addFragmentObjectToCollection(fragmentObjectOneOfOne, initiallyEmptyFragmentCollection);
+        CCConverter.addFragmentObjectToCollection(fragmentObjectOneOfOne, initiallyEmptyFragmentCollection);
         expect(initiallyEmptyFragmentCollection).toStrictEqual([fragmentObjectOneOfOne]);
 
         // Does not add a new element but updates the current one.
-        converter.addFragmentObjectToCollection(fragmentObjectOneOfTwo, withOneFragmentCollection);
+        CCConverter.addFragmentObjectToCollection(fragmentObjectOneOfTwo, withOneFragmentCollection);
         expect((withOneFragmentCollection)).toStrictEqual([fragmentObjectOne]);
 
         // Adds a new element to the collection, since the begin and end parameters have different values.
-        converter.addFragmentObjectToCollection(fragmentObjectTwo, fragmentCollectionThree);
+        CCConverter.addFragmentObjectToCollection(fragmentObjectTwo, fragmentCollectionThree);
         expect((fragmentCollectionThree)).toStrictEqual([fragmentObjectOne, fragmentObjectTwo]);
     });
 
     test('should convert XML to JSON', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
-        let converter = new CCConverter();
-        let xmlString = converter.read(fileLocation);
+        let xmlString = CCConverter.read(fileLocation);
 
         let jsonObject = [{
             "begin": "00:00:01:23",
@@ -249,6 +236,6 @@ describe('Given a DFXP file ', () => {
             "text": ["becuase it takes time", "to write good code using TDD."]
         }];
 
-        expect(converter.convert(xmlString)).toStrictEqual(jsonObject);
+        expect(CCConverter.convert(xmlString)).toStrictEqual(jsonObject);
     });
 });
