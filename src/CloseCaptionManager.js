@@ -33,6 +33,25 @@ class CloseCaptionManager {
     }
 
     /**
+     * Return the content fragments from the DFXP string.
+     * @param inputText {String}
+     * @returns {*} {Array}
+     */
+    getContentFragments(inputText) {
+
+        // Remove formatting characters;
+        inputText = inputText.replace(/[\r\n]/g, '');
+
+        // Get the content fragments which are in <p> tags
+        let contentFragments = inputText.match(/<body><div>(.*?)<\/div><\/body>/)[1];
+
+        // Create a content fragment from each <p> tag.
+        let pCollection = contentFragments.split('<p');
+
+        return pCollection;
+    }
+
+    /**
      * This method checks if a fragment string is valid and has the necessary parameters.
      *
      * @param fragmentString {String}
@@ -89,25 +108,6 @@ class CloseCaptionManager {
         } else {
             ccCollection.push(ccFragment);
         }
-    }
-
-    /**
-     * Return the content fragments from the DFXP string.
-     * @param inputText {String}
-     * @returns {*} {Array}
-     */
-    getContentFragments(inputText) {
-
-        // Remove formatting characters;
-        inputText = inputText.replace(/[\r\n]/g, '');
-
-        // Get the content fragments which are in <p> tags
-        let contentFragments = inputText.match(/<body><div>(.*?)<\/div><\/body>/)[1];
-
-        // Create a content fragment from each <p> tag.
-        let pCollection = contentFragments.split('<p');
-
-        return pCollection;
     }
 }
 

@@ -23,6 +23,23 @@ describe('Given a DFXP file ', () => {
         expect(converter.read(fileLocation)).toMatch(/This is a test text file./);
     });
 
+    test('should validate if the content fragment is valid via checking begin and end parameters.', () => {
+
+        let validFragmentString = 'begin=\"00:00:01:23\" end=\"00:00:05:07\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
+        let invalidFragmentStringWithoutBegin = 'end=\"00:00:05:07\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
+        let invalidFragmentStringWithoutEnd = 'begin=\"00:00:01:23\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
+        let invalidFragmentStringWithoutBeginAndEnd = 'region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
+        let invalidEmptyString = '';
+
+        let converter = new CCConverter();
+
+        expect(converter.isClosedCaptionFragmentValid(validFragmentString)).toBeTruthy();
+        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBegin)).toBeFalsy();
+        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutEnd)).toBeFalsy();
+        expect(converter.isClosedCaptionFragmentValid(invalidFragmentStringWithoutBeginAndEnd)).toBeFalsy();
+        expect(converter.isClosedCaptionFragmentValid(invalidEmptyString)).toBeFalsy();
+    });
+
     test('should convert DFXP contents fragments to an array Strings.', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
