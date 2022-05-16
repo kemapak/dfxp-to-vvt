@@ -2,15 +2,47 @@ const FileUtil = require('./FileUtil.js');
 
 class CloseCaptionManager {
 
+    /**
+     * Utility methods that reads a file and returns it's String content.
+     *
+     * @param fileLocation {String}
+     * @returns {String}
+     */
     static read(fileLocation) {
         return FileUtil.readFile(fileLocation);
     }
 
-    static write(fileLocation, ccCollection) {
-
+    /**
+     * Utility methods that writes a string into a file.
+     *
+     * @param fileLocation {String}
+     * @param contentString {String}
+     */
+    static write(fileLocation, contentString) {
+        FileUtil.writeFile(fileLocation, contentString);
     }
 
-    static convert(dfxpString) {
+    /**
+     * Converts a DFXP file into a VTT file.
+     *
+     * @param inputFileLocation {String}
+     * @param outputFileLocation {String}
+     */
+    static convert(inputFileLocation, outputFileLocation) {
+
+        let dfxpString = CloseCaptionManager.read(inputFileLocation);
+        let ccCollection = CloseCaptionManager.convertDfxpStringToCloseCaptionCollection(dfxpString);
+        let vttString = CloseCaptionManager.convertCloseCaptionCollectionToCloseCaptionString(ccCollection);
+        CloseCaptionManager.write(outputFileLocation, vttString);
+    }
+
+    /**
+     * Utility method that converts a DFXP String into a JavaScript close caption collection.
+     *
+     * @param dfxpString {String}
+     * @returns {Array}
+     */
+    static convertDfxpStringToCloseCaptionCollection(dfxpString) {
 
         let contentFragments = this.getContentFragments(dfxpString);
 
@@ -25,8 +57,33 @@ class CloseCaptionManager {
             this.addFragmentObjectToCollection(currentCCFrame, ccCollection);
         }
 
-// debugger;
         return ccCollection;
+    }
+
+    /**
+     * Utility method that converts a JavaScript close caption collection into a VTT string.
+     *
+     * @param ccCollection {Array}
+     * @returns {String}
+     */
+    static convertCloseCaptionCollectionToCloseCaptionString(ccCollection) {
+
+        let newLineCharacter = '\n';
+        let paragraph = newLineCharacter + newLineCharacter;
+        let vvtString = 'WEBVTT' + paragraph;
+
+        for (let ccIndex = 0, maxCcIndex = ccCollection.length; ccIndex < maxCcIndex; ccIndex++) {
+            vvtString += ccIndex + newLineCharacter;
+            vvtString += ccCollection[ccIndex].begin + ' --> ' + ccCollection[ccIndex].end + newLineCharacter;
+
+            for (let textIndex = 0, textCollection = ccCollection[ccIndex].text, maxTextIndex = textCollection.length; textIndex < maxTextIndex; textIndex++) {
+                vvtString += textCollection[textIndex] + newLineCharacter;
+            }
+
+            vvtString += paragraph;
+        }
+
+        return vvtString;
     }
 
     /**
@@ -75,9 +132,15 @@ class CloseCaptionManager {
 
         let ccFragment = {};
 
-        // We might find other ways to do this in more robust way.
-        ccFragment.begin = parameterValues[1];
-        ccFragment.end = parameterValues[3];
+        /*
+           We might find other ways to do this in more robust way.
+           We remove the fragments and replace them with 000 milliseconds, this is not exact match but close enough.
+        */
+        let beginResult = parameterValues[1].split(':');
+        ccFragment.begin = beginResult[0] + ':' + beginResult[1] + ':' + beginResult[2] + '.000';
+
+        let endResult = parameterValues[3].split(':');
+        ccFragment.end = endResult[0] + ':' + endResult[1] + ':' + endResult[2] + '.000';;
 
         /* We create text as a collections since there could be multiple lines for the same segment/fragment. */
         ccFragment.text = [];

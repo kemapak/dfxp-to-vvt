@@ -1,5 +1,6 @@
 const readFile = require("../src/FileUtil");
 const CCConverter = require('../src/CloseCaptionManager');
+const FileUtil = require("../src/FileUtil");
 
 describe('Given a DFXP file ', () => {
 
@@ -17,6 +18,16 @@ describe('Given a DFXP file ', () => {
         let fileLocation = __dirname + '/asset/test.txt';
 
         expect(CCConverter.read(fileLocation)).toMatch(/This is a test text file./);
+    });
+
+    test('should write file from a string text', () => {
+        let fileLocation = __dirname + '/asset/resultTwo.txt';
+
+        let testString = 'This is text string two.';
+
+        CCConverter.write(fileLocation, testString);
+
+        expect(CCConverter.read(fileLocation)).toMatch(/This is text string two./);
     });
 
     test('should convert DFXP contents fragments to an array Strings.', () => {
@@ -104,17 +115,17 @@ describe('Given a DFXP file ', () => {
     test('should create JavaScript object from content fragment string.', () => {
 
         let fragmentString = 'begin=\"00:00:01:23\" end=\"00:00:05:07\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>';
-        let fragmentObject = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is']};
+        let fragmentObject = {begin: '00:00:01.000', end: '00:00:05.000', text: ['This is']};
 
         expect(CCConverter.createCCFragmentObject(fragmentString)).toStrictEqual(fragmentObject);
     });
 
     test('should add a content fragment to fragment collection correctly.', () => {
 
-        let fragmentObjectOneOfOne = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is']};
-        let fragmentObjectOneOfTwo = {begin: '00:00:01:23', end: '00:00:05:07', text: ['just a test']};
-        let fragmentObjectOne = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is', 'just a test']};
-        let fragmentObjectTwo = {begin: '00:00:05:07', end: '00:00:08:26', text: ['Hello World']};
+        let fragmentObjectOneOfOne = {begin: '00:00:01.000', end: '00:00:05.000', text: ['This is']};
+        let fragmentObjectOneOfTwo = {begin: '00:00:01.000', end: '00:00:05.000', text: ['just a test']};
+        let fragmentObjectOne = {begin: '00:00:01.000', end: '00:00:05.000', text: ['This is', 'just a test']};
+        let fragmentObjectTwo = {begin: '00:00:05.000', end: '00:00:08.000', text: ['Hello World']};
 
         let initiallyEmptyFragmentCollection = [];
         let withOneFragmentCollection = [fragmentObjectOneOfOne];
@@ -138,104 +149,176 @@ describe('Given a DFXP file ', () => {
 
         let xmlString = CCConverter.read(fileLocation);
 
-        let jsonObject = [{
-            "begin": "00:00:01:23",
-            "end": "00:00:05:07",
+        let closedCaptionCollection = [{
+            "begin": "00:00:01.000",
+            "end": "00:00:05.000",
             "text": ["This is", "just a test"]
         }, {
-            "begin": "00:00:05:07",
-            "end": "00:00:08:26",
+            "begin": "00:00:05.000",
+            "end": "00:00:08.000",
             "text": ["Hello World", "Hello You"]
         }, {
-            "begin": "00:00:08:26",
-            "end": "00:00:11:12",
+            "begin": "00:00:08.000",
+            "end": "00:00:11.000",
             "text": ["does not matter", "because this is just"]
-        }, {"begin": "00:00:11:12", "end": "00:00:13:24", "text": ["a test"]}, {
-            "begin": "00:00:13:24",
-            "end": "00:00:16:14",
+        }, {"begin": "00:00:11.000", "end": "00:00:13.000", "text": ["a test"]}, {
+            "begin": "00:00:13.000",
+            "end": "00:00:16.000",
             "text": ["a long test", "very long"]
-        }, {"begin": "00:00:16:14", "end": "00:00:19:01", "text": ["sample text", "big text"]}, {
-            "begin": "00:00:19:01",
-            "end": "00:00:23:21",
+        }, {"begin": "00:00:16.000", "end": "00:00:19.000", "text": ["sample text", "big text"]}, {
+            "begin": "00:00:19.000",
+            "end": "00:00:23.000",
             "text": ["Lorem Ipsum", "or Ipsum Lorem"]
         }, {
-            "begin": "00:00:23:21",
-            "end": "00:00:26:28",
+            "begin": "00:00:23.000",
+            "end": "00:00:26.000",
             "text": ["The good news is just a test", "You can do this"]
-        }, {"begin": "00:00:26:28", "end": "00:00:30:02", "text": ["why not", "Run the test"]}, {
-            "begin": "00:00:30:02",
-            "end": "00:00:33:03",
+        }, {"begin": "00:00:26.000", "end": "00:00:30.000", "text": ["why not", "Run the test"]}, {
+            "begin": "00:00:30.000",
+            "end": "00:00:33.000",
             "text": ["See if it works", "If not so bad"]
         }, {
-            "begin": "00:00:33:03",
-            "end": "00:00:36:01",
+            "begin": "00:00:33.000",
+            "end": "00:00:36.000",
             "text": ["don't skip any unit tests"]
         }, {
-            "begin": "00:00:36:01",
-            "end": "00:00:38:12",
+            "begin": "00:00:36.000",
+            "end": "00:00:38.000",
             "text": ["TDD makes coding really fun", "If you do not write test"]
-        }, {"begin": "00:00:38:12", "end": "00:00:39:14", "text": ["pressure is on"]}, {
-            "begin": "00:00:39:14",
-            "end": "00:00:43:24",
+        }, {"begin": "00:00:38.000", "end": "00:00:39.000", "text": ["pressure is on"]}, {
+            "begin": "00:00:39.000",
+            "end": "00:00:43.000",
             "text": ["Quality is build in", "anything afterwards is just a patch"]
         }, {
-            "begin": "00:00:43:24",
-            "end": "00:00:45:29",
+            "begin": "00:00:43.000",
+            "end": "00:00:45.000",
             "text": ["healthy code is small code"]
         }, {
-            "begin": "00:00:45:29",
-            "end": "00:00:49:07",
+            "begin": "00:00:45.000",
+            "end": "00:00:49.000",
             "text": ["best code is no code", "TDD makes code simpler"]
         }, {
-            "begin": "00:00:49:07",
-            "end": "00:00:51:07",
+            "begin": "00:00:49.000",
+            "end": "00:00:51.000",
             "text": ["You write more test code then your code"]
         }, {
-            "begin": "00:00:51:07",
-            "end": "00:00:53:22",
+            "begin": "00:00:51.000",
+            "end": "00:00:53.000",
             "text": ["You should enjoy", "seeing the green"]
         }, {
-            "begin": "00:00:53:22",
-            "end": "00:00:56:22",
+            "begin": "00:00:53.000",
+            "end": "00:00:56.000",
             "text": ["get existed when you see red", "This just a test file"]
-        }, {"begin": "00:00:56:22", "end": "00:00:58:05", "text": ["How longer can I mumble"]}, {
-            "begin": "00:00:58:05",
-            "end": "00:01:01:14",
+        }, {"begin": "00:00:56.000", "end": "00:00:58.000", "text": ["How longer can I mumble"]}, {
+            "begin": "00:00:58.000",
+            "end": "00:01:01.000",
             "text": ["Sometimes, for hours", "sometimes never"]
         }, {
-            "begin": "00:01:01:14",
-            "end": "00:01:04:05",
+            "begin": "00:01:01.000",
+            "end": "00:01:04.000",
             "text": ["when my code runs", "happiness"]
-        }, {"begin": "00:01:04:05", "end": "00:01:06:27", "text": ["no other feeling"]}, {
-            "begin": "00:01:06:27",
-            "end": "00:01:10:07",
+        }, {"begin": "00:01:04.000", "end": "00:01:06.000", "text": ["no other feeling"]}, {
+            "begin": "00:01:06.000",
+            "end": "00:01:10.000",
             "text": ["If it fails", "what an exitement to fix them"]
         }, {
-            "begin": "00:01:10:07",
-            "end": "00:01:13:15",
+            "begin": "00:01:10.000",
+            "end": "00:01:13.000",
             "text": ["not everyone knows", "the pleasure of writing unit tests"]
-        }, {"begin": "00:01:13:15", "end": "00:01:14:25", "text": ["geeks maybe."]}, {
-            "begin": "00:01:14:25",
-            "end": "00:01:18:18",
+        }, {"begin": "00:01:13.000", "end": "00:01:14.000", "text": ["geeks maybe."]}, {
+            "begin": "00:01:14.000",
+            "end": "00:01:18.000",
             "text": ["Also, please talk to your friends", "do not let them ship code"]
         }, {
-            "begin": "00:01:18:18",
-            "end": "00:01:23:04",
+            "begin": "00:01:18.000",
+            "end": "00:01:23.000",
             "text": ["without unit tests", "Finally this finishing"]
         }, {
-            "begin": "00:01:23:04",
-            "end": "00:01:25:18",
+            "begin": "00:01:23.000",
+            "end": "00:01:25.000",
             "text": ["For best results", "100% code coverage is a must"]
         }, {
-            "begin": "00:01:25:18",
-            "end": "00:01:27:13",
+            "begin": "00:01:25.000",
+            "end": "00:01:27.000",
             "text": ["remember to plan ahead", "for extra time"]
         }, {
-            "begin": "00:01:27:13",
-            "end": "00:01:30:00",
+            "begin": "00:01:27.000",
+            "end": "00:01:30.000",
             "text": ["becuase it takes time", "to write good code using TDD."]
         }];
 
-        expect(CCConverter.convert(xmlString)).toStrictEqual(jsonObject);
+        expect(CCConverter.convertDfxpStringToCloseCaptionCollection(xmlString)).toStrictEqual(closedCaptionCollection);
+    });
+
+    test('should convert a closed caption collection to VVT closed caption string.', () => {
+
+        let closedCaptionCollection = [
+            {
+                "begin": "00:00:01.000",
+                "end": "00:00:05.000",
+                "text": ["This is", "just a test"]
+            }, {
+                "begin": "00:00:05.000",
+                "end": "00:00:08.000",
+                "text": ["Hello World", "Hello You"]
+            }, {
+                "begin": "00:00:08.000",
+                "end": "00:00:11.000",
+                "text": ["does not matter", "because this is just"]
+            }, {"begin": "00:00:11.000", "end": "00:00:13.000", "text": ["a test"]}, {
+                "begin": "00:00:13.000",
+                "end": "00:00:16.000",
+                "text": ["a long test", "very long"]
+            }
+        ];
+
+        let closedCaptionString = 'WEBVTT\n' +
+            '\n' +
+            '0\n' +
+            '00:00:01.000 --> 00:00:05.000\n' +
+            'This is\n' +
+            'just a test\n' +
+            '\n' +
+            '\n' +
+            '1\n' +
+            '00:00:05.000 --> 00:00:08.000\n' +
+            'Hello World\n' +
+            'Hello You\n' +
+            '\n' +
+            '\n' +
+            '2\n' +
+            '00:00:08.000 --> 00:00:11.000\n' +
+            'does not matter\n' +
+            'because this is just\n' +
+            '\n' +
+            '\n' +
+            '3\n' +
+            '00:00:11.000 --> 00:00:13.000\n' +
+            'a test\n' +
+            '\n' +
+            '\n' +
+            '4\n' +
+            '00:00:13.000 --> 00:00:16.000\n' +
+            'a long test\n' +
+            'very long\n' +
+            '\n' +
+            '\n';
+
+        expect(CCConverter.convertCloseCaptionCollectionToCloseCaptionString(closedCaptionCollection)).toMatch(closedCaptionString);
+    });
+
+    test('should convert a DFXP file to a VTT file.', () => {
+        let inputFileLocation = __dirname + '/asset/test-dfxp.xml';
+        let outputFileLocation = __dirname + '/asset/result.vtt';
+
+        let dfxpString = CCConverter.read(inputFileLocation);
+        let ccCollection = CCConverter.convertDfxpStringToCloseCaptionCollection(dfxpString);
+        let vttString = CCConverter.convertCloseCaptionCollectionToCloseCaptionString(ccCollection);
+
+        CCConverter.convert(inputFileLocation, outputFileLocation);
+
+        let generatedVttString = CCConverter.read(outputFileLocation);
+
+        expect(vttString).toMatch(generatedVttString);
     });
 });

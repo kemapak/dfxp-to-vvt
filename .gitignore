@@ -6,7 +6,8 @@ package-lock.json
 
 # Result test file.
 test/asset/result.txt
-test/asset/result.vvt
+test/asset/resultTwo.txt
+test/asset/result.vtt
 
 # Logs
 logs
