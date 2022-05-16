@@ -119,6 +119,32 @@ describe('Given a DFXP file ', () => {
         expect(converter.createCCFragmentObject(fragmentString)).toStrictEqual(fragmentObject);
     });
 
+    test('should add a content fragment to fragment collection correctly.', () => {
+
+        let fragmentObjectOneOfOne = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is']};
+        let fragmentObjectOneOfTwo = {begin: '00:00:01:23', end: '00:00:05:07', text: ['just a test']};
+        let fragmentObjectOne = {begin: '00:00:01:23', end: '00:00:05:07', text: ['This is', 'just a test']};
+        let fragmentObjectTwo = {begin: '00:00:05:07', end: '00:00:08:26', text: ['Hello World']};
+
+        let initiallyEmptyFragmentCollection = [];
+        let withOneFragmentCollection = [fragmentObjectOneOfOne];
+        let fragmentCollectionThree = [fragmentObjectOne];
+
+        let converter = new CCConverter();
+
+        // Adds a new element to the collection.
+        converter.addFragmentObjectToCollection(fragmentObjectOneOfOne, initiallyEmptyFragmentCollection);
+        expect(initiallyEmptyFragmentCollection).toStrictEqual([fragmentObjectOneOfOne]);
+
+        // Does not add a new element but updates the current one.
+        converter.addFragmentObjectToCollection(fragmentObjectOneOfTwo, withOneFragmentCollection);
+        expect((withOneFragmentCollection)).toStrictEqual([fragmentObjectOne]);
+
+        // Adds a new element to the collection, since the begin and end parameters have different values.
+        converter.addFragmentObjectToCollection(fragmentObjectTwo, fragmentCollectionThree);
+        expect((fragmentCollectionThree)).toStrictEqual([fragmentObjectOne, fragmentObjectTwo]);
+    });
+
     test('should convert XML to JSON', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
