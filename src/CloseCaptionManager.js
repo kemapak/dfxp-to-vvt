@@ -2,8 +2,8 @@ const readFile = require('./util.js');
 
 class CloseCaptionManager {
 
-    constructor() {
-    }
+    // Jest cannot handle static/utility classes so added empty constructor.
+    constructor() {}
 
     read(fileLocation) {
         return readFile(fileLocation);
@@ -13,46 +13,22 @@ class CloseCaptionManager {
 
     }
 
-    getBeginPropertyValue(text) {
-
-    }
-
-    getEndPropertyValue(text) {
-
-    }
-
-    getTextValue(text) {
-
-    }
-
     convert(dfxpString) {
-        // debugger;
+
         let contentFragments = this.getContentFragments(dfxpString);
 
         let ccCollection = [];
+
         for (let index = 0, maxIndex = contentFragments.length; index < maxIndex; index++) {
 
-            let frame = contentFragments[index];
+            if (!this.isClosedCaptionFragmentValid(contentFragments[index])) {continue;}
 
-            if (!this.isClosedCaptionFragmentValid(frame)) {
-                continue;
-            }
+            let currentCCFrame = this.createCCFragmentObject(contentFragments[index]);
 
-            let currentCCFrame = this.createFrame(frame);
-
-            let previousCCFrame = ccCollection[ccCollection.length - 1];
-            if ((null != previousCCFrame) && (previousCCFrame.begin == currentCCFrame.begin)) {
-                previousCCFrame.text.push(currentCCFrame.text[0]);
-                continue;
-            } else {
-                ccCollection.push(currentCCFrame);
-            }
-
-
+            this.addFragmentObjectToCollection(currentCCFrame, ccCollection);
         }
         let x = ccCollection;
-        // debugger;
-
+        debugger;
     }
 
     /**
@@ -74,9 +50,9 @@ class CloseCaptionManager {
      * Create a close caption fragment in JSON from fragmentString parameter.
      *
      * @param fragmentString {String} example format: <p begin="00:00:00:00" end="00:00:00:00">text</p>
-     * @returns {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text"]}
+     * @returns {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text", "text", ...]}
      */
-    createFrame(fragmentString) {
+    createCCFragmentObject(fragmentString) {
 
         let parameterValues = fragmentString.split('"');
 
@@ -91,6 +67,27 @@ class CloseCaptionManager {
         ccFragment.text[0] = fragmentString.match(/>(.*?)</)[1];
 
         return ccFragment;
+    }
+
+    /**
+     * This method adds a close caption Javascript object fragment to close caption collection.
+     *
+     * @param ccFragment {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text", "text", ...]}
+     * @param ccCollection {Array}
+     */
+    addFragmentObjectToCollection(ccFragment, ccCollection) {
+
+        let previousCCFrame = ccCollection[ccCollection.length - 1];
+
+        /* If the begin parameter has the same value as previous content fragment, it means it is a new line
+            in the same fragment, update the previous member. Otherwise it is new fragment.
+            Remember the text is a collection, see the data structure of a ccFragment.
+         */
+        if ((null != previousCCFrame) && (previousCCFrame.begin == ccFragment.begin)) {
+            previousCCFrame.text.push(ccFragment.text[0]);
+        } else {
+            ccCollection.push(ccFragment);
+        }
     }
 
     /**
