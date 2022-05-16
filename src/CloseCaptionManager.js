@@ -27,8 +27,9 @@ class CloseCaptionManager {
 
             this.addFragmentObjectToCollection(currentCCFrame, ccCollection);
         }
-        let x = ccCollection;
-        debugger;
+
+// debugger;
+        return ccCollection;
     }
 
     /**
