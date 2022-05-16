@@ -23,6 +23,75 @@ describe('Given a DFXP file ', () => {
         expect(converter.read(fileLocation)).toMatch(/This is a test text file./);
     });
 
+    test('should convert DFXP contents fragments to an array Strings.', () => {
+        let fileLocation = __dirname + '/asset/test-dfxp.xml';
+
+        let converter = new CCConverter();
+
+        let xmlString = converter.read(fileLocation);
+
+        let jsonObject = [
+            "",
+            " begin=\"00:00:01:23\" end=\"00:00:05:07\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">This is</p>",
+            " begin=\"00:00:01:23\" end=\"00:00:05:07\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"56.25% 5.33%\">just a test</p>",
+            " begin=\"00:00:05:07\" end=\"00:00:08:26\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">Hello World</p>",
+            " begin=\"00:00:05:07\" end=\"00:00:08:26\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"54.38% 5.33%\">Hello You</p>",
+            " begin=\"00:00:08:26\" end=\"00:00:11:12\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"58.13% 5.33%\">does not matter</p>",
+            " begin=\"00:00:08:26\" end=\"00:00:11:12\" region=\"pop2\" style=\"basic\" tts:origin=\"36.88% 84.67%\" tts:extent=\"24.38% 5.33%\">because this is just</p>",
+            " begin=\"00:00:11:12\" end=\"00:00:13:24\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 84.67%\" tts:extent=\"58.13% 5.33%\">a test</p>",
+            " begin=\"00:00:13:24\" end=\"00:00:16:14\" region=\"pop1\" style=\"basic\" tts:origin=\"27.5% 79.33%\" tts:extent=\"45% 5.33%\">a long test</p>",
+            " begin=\"00:00:13:24\" end=\"00:00:16:14\" region=\"pop2\" style=\"basic\" tts:origin=\"33.12% 84.67%\" tts:extent=\"33.75% 5.33%\">very long</p>",
+            " begin=\"00:00:16:14\" end=\"00:00:19:01\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"58.13% 5.33%\">sample text</p>",
+            " begin=\"00:00:16:14\" end=\"00:00:19:01\" region=\"pop2\" style=\"basic\" tts:origin=\"35% 84.67%\" tts:extent=\"30% 5.33%\">big text</p>",
+            " begin=\"00:00:19:01\" end=\"00:00:23:21\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"60% 5.33%\">Lorem Ipsum</p>",
+            " begin=\"00:00:19:01\" end=\"00:00:23:21\" region=\"pop2\" style=\"basic\" tts:origin=\"33.12% 84.67%\" tts:extent=\"33.75% 5.33%\">or Ipsum Lorem</p>",
+            " begin=\"00:00:23:21\" end=\"00:00:26:28\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"58.13% 5.33%\">The good news is just a test</p>",
+            " begin=\"00:00:23:21\" end=\"00:00:26:28\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"56.25% 5.33%\">You can do this</p>",
+            " begin=\"00:00:26:28\" end=\"00:00:30:02\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"60% 5.33%\">why not</p>",
+            " begin=\"00:00:26:28\" end=\"00:00:30:02\" region=\"pop2\" style=\"basic\" tts:origin=\"35% 84.67%\" tts:extent=\"28.13% 5.33%\">Run the test</p>",
+            " begin=\"00:00:30:02\" end=\"00:00:33:03\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 79.33%\" tts:extent=\"54.38% 5.33%\">See if it works</p>",
+            " begin=\"00:00:30:02\" end=\"00:00:33:03\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"54.38% 5.33%\">If not so bad</p>",
+            " begin=\"00:00:33:03\" end=\"00:00:36:01\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"56.25% 5.33%\">don't skip any unit tests</p>",
+            " begin=\"00:00:36:01\" end=\"00:00:38:12\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 79.33%\" tts:extent=\"56.25% 5.33%\">TDD makes coding really fun</p>",
+            " begin=\"00:00:36:01\" end=\"00:00:38:12\" region=\"pop2\" style=\"basic\" tts:origin=\"27.5% 84.67%\" tts:extent=\"45% 5.33%\">If you do not write test</p>",
+            " begin=\"00:00:38:12\" end=\"00:00:39:14\" region=\"pop1\" style=\"basic\" tts:origin=\"40.62% 84.67%\" tts:extent=\"16.88% 5.33%\">pressure is on</p>",
+            " begin=\"00:00:39:14\" end=\"00:00:43:24\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"60% 5.33%\">Quality is build in</p>",
+            " begin=\"00:00:39:14\" end=\"00:00:43:24\" region=\"pop2\" style=\"basic\" tts:origin=\"23.75% 84.67%\" tts:extent=\"50.63% 5.33%\">anything afterwards is just a patch</p>",
+            " begin=\"00:00:43:24\" end=\"00:00:45:29\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 84.67%\" tts:extent=\"60% 5.33%\">healthy code is small code</p>",
+            " begin=\"00:00:45:29\" end=\"00:00:49:07\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"58.13% 5.33%\">best code is no code</p>",
+            " begin=\"00:00:45:29\" end=\"00:00:49:07\" region=\"pop2\" style=\"basic\" tts:origin=\"33.12% 84.67%\" tts:extent=\"33.75% 5.33%\">TDD makes code simpler</p>",
+            " begin=\"00:00:49:07\" end=\"00:00:51:07\" region=\"pop1\" style=\"basic\" tts:origin=\"35% 84.67%\" tts:extent=\"30% 5.33%\">You write more test code then your code</p>",
+            " begin=\"00:00:51:07\" end=\"00:00:53:22\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 79.33%\" tts:extent=\"54.38% 5.33%\">You should enjoy</p>",
+            " begin=\"00:00:51:07\" end=\"00:00:53:22\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"54.38% 5.33%\">seeing the green</p>",
+            " begin=\"00:00:53:22\" end=\"00:00:56:22\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 79.33%\" tts:extent=\"56.25% 5.33%\">get existed when you see red</p>",
+            " begin=\"00:00:53:22\" end=\"00:00:56:22\" region=\"pop2\" style=\"basic\" tts:origin=\"20% 84.67%\" tts:extent=\"58.13% 5.33%\">This just a test file</p>",
+            " begin=\"00:00:56:22\" end=\"00:00:58:05\" region=\"pop1\" style=\"basic\" tts:origin=\"42.5% 84.67%\" tts:extent=\"15% 5.33%\">How longer can I mumble</p>",
+            " begin=\"00:00:58:05\" end=\"00:01:01:14\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"52.5% 5.33%\">Sometimes, for hours</p>",
+            " begin=\"00:00:58:05\" end=\"00:01:01:14\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"54.38% 5.33%\">sometimes never</p>",
+            " begin=\"00:01:01:14\" end=\"00:01:04:05\" region=\"pop1\" style=\"basic\" tts:origin=\"27.5% 79.33%\" tts:extent=\"45% 5.33%\">when my code runs</p>",
+            " begin=\"00:01:01:14\" end=\"00:01:04:05\" region=\"pop2\" style=\"basic\" tts:origin=\"40.62% 84.67%\" tts:extent=\"18.75% 5.33%\">happiness</p>",
+            " begin=\"00:01:04:05\" end=\"00:01:06:27\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 84.67%\" tts:extent=\"60% 5.33%\">no other feeling</p>",
+            " begin=\"00:01:06:27\" end=\"00:01:10:07\" region=\"pop1\" style=\"basic\" tts:origin=\"21.88% 79.33%\" tts:extent=\"56.25% 5.33%\">If it fails</p>",
+            " begin=\"00:01:06:27\" end=\"00:01:10:07\" region=\"pop2\" style=\"basic\" tts:origin=\"20% 84.67%\" tts:extent=\"58.13% 5.33%\">what an exitement to fix them</p>",
+            " begin=\"00:01:10:07\" end=\"00:01:13:15\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"58.13% 5.33%\">not everyone knows</p>",
+            " begin=\"00:01:10:07\" end=\"00:01:13:15\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"54.38% 5.33%\">the pleasure of writing unit tests</p>",
+            " begin=\"00:01:13:15\" end=\"00:01:14:25\" region=\"pop1\" style=\"basic\" tts:origin=\"38.75% 84.67%\" tts:extent=\"20.63% 5.33%\">geeks maybe.</p>",
+            " begin=\"00:01:14:25\" end=\"00:01:18:18\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"60% 5.33%\">Also, please talk to your friends</p>",
+            " begin=\"00:01:14:25\" end=\"00:01:18:18\" region=\"pop2\" style=\"basic\" tts:origin=\"21.88% 84.67%\" tts:extent=\"56.25% 5.33%\">do not let them ship code</p>",
+            " begin=\"00:01:18:18\" end=\"00:01:23:04\" region=\"pop1\" style=\"basic\" tts:origin=\"20% 79.33%\" tts:extent=\"60% 5.33%\">without unit tests</p>",
+            " begin=\"00:01:18:18\" end=\"00:01:23:04\" region=\"pop2\" style=\"basic\" tts:origin=\"23.75% 84.67%\" tts:extent=\"52.5% 5.33%\">Finally this finishing</p>",
+            " begin=\"00:01:23:04\" end=\"00:01:25:18\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">For best results</p>",
+            " begin=\"00:01:23:04\" end=\"00:01:25:18\" region=\"pop2\" style=\"basic\" tts:origin=\"33.12% 84.67%\" tts:extent=\"33.75% 5.33%\">100% code coverage is a must</p>",
+            " begin=\"00:01:25:18\" end=\"00:01:27:13\" region=\"pop1\" style=\"basic\" tts:origin=\"25.62% 79.33%\" tts:extent=\"48.75% 5.33%\">remember to plan ahead</p>",
+            " begin=\"00:01:25:18\" end=\"00:01:27:13\" region=\"pop2\" style=\"basic\" tts:origin=\"42.5% 84.67%\" tts:extent=\"15% 5.33%\">for extra time</p>",
+            " begin=\"00:01:27:13\" end=\"00:01:30:00\" region=\"pop1\" style=\"basic\" tts:origin=\"23.75% 79.33%\" tts:extent=\"50.63% 5.33%\">becuase it takes time</p>",
+            " begin=\"00:01:27:13\" end=\"00:01:30:00\" region=\"pop2\" style=\"basic\" tts:origin=\"31.25% 84.67%\" tts:extent=\"37.5% 5.33%\">to write good code using TDD.</p>"
+        ]
+
+        expect(converter.getContentFragments(xmlString)).toStrictEqual(jsonObject);
+
+    });
+
     test('should convert XML to JSON', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
