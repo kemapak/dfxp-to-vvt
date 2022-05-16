@@ -3,7 +3,7 @@ const CCConverter = require('../src/CloseCaptionManager');
 
 describe('Given a DFXP file ', () => {
 
-    xtest('if a file does not exist should throw an exception', () => {
+    test('if a file does not exist should throw an exception', () => {
         let fileLocation = __dirname + '/asset/does-not-exists.txt';
 
         let converter = new CCConverter();
@@ -14,7 +14,7 @@ describe('Given a DFXP file ', () => {
         expect(wrapper).toThrow(fileLocation + ' does not exists!');
     });
 
-    xtest('if a file exist it should read the contents', () => {
+    test('if a file exist it should read the contents', () => {
         let fileLocation = __dirname + '/asset/test.txt';
 
         let converter = new CCConverter();
@@ -22,7 +22,7 @@ describe('Given a DFXP file ', () => {
         expect(converter.read(fileLocation)).toMatch(/This is a test text file./);
     });
 
-    test('should convert XML to JSON', () => {
+    xtest('should convert XML to JSON', () => {
         let fileLocation = __dirname + '/asset/test-dfxp.xml';
 
         let converter = new CCConverter();

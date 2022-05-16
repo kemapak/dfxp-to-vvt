@@ -71,25 +71,26 @@ class CloseCaptionManager {
     }
 
     /**
-     * Create a close caption fragment in JSON from the string frame parameter.
+     * Create a close caption fragment in JSON from fragmentString parameter.
      *
-     * @param frame {String} example format: <p begin="00:00:00" end="00:00:00">text</p>
-     * @returns {Object} example format: {begin: "00:00:00", end: "00:00:00", text: ["text"]}
+     * @param fragmentString {String} example format: <p begin="00:00:00:00" end="00:00:00:00">text</p>
+     * @returns {Object} example format: {begin: "00:00:00:00", end: "00:00:00:00", text: ["text"]}
      */
-    createFrame(frame) {
+    createFrame(fragmentString) {
 
-        let parameterValues = frame.split('"');
+        let parameterValues = fragmentString.split('"');
 
-        let ccFrame = {};
+        let ccFragment = {};
 
-        ccFrame.begin = parameterValues[1];
-        ccFrame.end = parameterValues[3];
+        // We might find other ways to do this in more robust way.
+        ccFragment.begin = parameterValues[1];
+        ccFragment.end = parameterValues[3];
 
         /* We create text as a collections since there could be multiple lines for the same segment/fragment. */
-        ccFrame.text = [];
-        ccFrame.text[0] = frame.match(/>(.*?)</)[1];
+        ccFragment.text = [];
+        ccFragment.text[0] = fragmentString.match(/>(.*?)</)[1];
 
-        return ccFrame;
+        return ccFragment;
     }
 
     /**
