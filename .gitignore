@@ -4,6 +4,10 @@
 # We do not need the package-lock file
 package-lock.json
 
+# Result test file.
+test/asset/result.txt
+test/asset/result.vvt
+
 # Logs
 logs
 *.log
