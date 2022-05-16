@@ -1,4 +1,4 @@
-# dfxp_to_vvt
+# dfxp-to-vvt
 This is a utility that converts closed captioned files from DFXP to VVT format. It is written in JavaScript and can be 
 used part of a Node application or service.
 
