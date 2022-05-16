@@ -1,4 +1,4 @@
-const readFile = require('../src/util.js');
+const FileUtil = require('../src/FileUtil.js');
 
 describe('Given a test file.', () => {
 
@@ -6,7 +6,7 @@ describe('Given a test file.', () => {
         let fileLocation = __dirname + '/asset/does-not-exists.txt';
 
         function wrapper() {
-            readFile(fileLocation);
+            FileUtil.readFile(fileLocation);
         }
 
         expect(wrapper).toThrow(fileLocation + ' does not exists!');
@@ -15,6 +15,6 @@ describe('Given a test file.', () => {
     test('should return the contents of the file.', () => {
         let fileLocation = __dirname + '/asset/test.txt';
 
-        expect(readFile(fileLocation)).toMatch(/This is a test text file./);
+        expect(FileUtil.readFile(fileLocation)).toMatch(/This is a test text file./);
     });
 });

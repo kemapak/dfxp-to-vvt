@@ -1,4 +1,4 @@
-const readFile = require('./util.js');
+const FileUtil = require('./FileUtil.js');
 
 class CloseCaptionManager {
 
@@ -6,7 +6,7 @@ class CloseCaptionManager {
     constructor() {}
 
     read(fileLocation) {
-        return readFile(fileLocation);
+        return FileUtil.readFile(fileLocation);
     }
 
     write() {

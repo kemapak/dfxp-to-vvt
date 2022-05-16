@@ -1,4 +1,4 @@
-const readFile = require("../src/util");
+const readFile = require("../src/FileUtil");
 const CCConverter = require('../src/CloseCaptionManager');
 
 describe('Given a DFXP file ', () => {
